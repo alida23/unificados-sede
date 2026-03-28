@@ -60,7 +60,7 @@
             
             // Verificamos si hay sesión, si no, al login
             if (!localStorage.getItem('idUsuario')) {
-                window.location.href = 'login.html';
+                window.location.href = 'index.html';
             }
         });
 
@@ -73,7 +73,7 @@
 
         function cerrarSesion() {
             localStorage.clear();
-            window.location.href = 'login.html';
+            window.location.href = 'index.html';
         }
     </script>
 </body>

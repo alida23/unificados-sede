@@ -5,14 +5,14 @@ function verificarAcceso(tipoPagina) {
 
     if (tipoPagina === 'admin') {
         if (token !== 'true' || rol !== 'admin') {
-            window.location.replace('login.html');
+            window.location.replace('index.html');
             return false;
         }
     }
 
     if (tipoPagina === 'vendedora') {
         if (token !== 'true') {
-            window.location.replace('login.html');
+            window.location.replace('index.html');
             return false;
         }
     }

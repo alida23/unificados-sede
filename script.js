@@ -22,7 +22,7 @@ function obtenerBcrypt() {
     if (typeof dcodeIO !== 'undefined' && dcodeIO.bcrypt) return dcodeIO.bcrypt;
     if (typeof bcrypt !== 'undefined') return bcrypt;
     return window.bcrypt || null;
-}
+}   
     
 
 // ==========================================
@@ -159,7 +159,7 @@ window.logout = function () {
     localStorage.removeItem('nombreUsuario');
     localStorage.removeItem('rol');
 
-    window.location.replace('login.html');
+    window.location.replace('index.html');
 };
 
 // ==========================================
