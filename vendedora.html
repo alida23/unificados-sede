@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Vendedora - Unificados Sede</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body style="background-color: #f4f7f6;">
+
+    <div id="panel-vendedora" class="container">
+        <div style="padding: 20px; max-width: 500px; margin: auto; font-family: sans-serif;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="color: #d81b60;">¡Hola! 👋</h2>
+                <button onclick="cerrarSesion()" style="background: #eee; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold;">Cerrar Sesión</button>
+            </div>
+            
+            <div class="card-scanner" style="background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <h3 style="margin-top: 0; color: #333; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px;">📦 Registrar Paquete</h3>
+                
+                <form id="formRegistroVendedora">
+                    <div style="margin-top: 20px; margin-bottom: 15px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Nombre del Cliente:</label>
+                        <input type="text" id="reg-cliente" placeholder="Nombre completo" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box;">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Cantidad de Paquetes:</label>
+                        <input type="number" id="reg-cant" value="1" min="1" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box;">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Fecha de Entrega en Sede:</label>
+                        <input type="date" id="reg-fecha" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box;">
+                    </div>
+
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Socia/Representante (Opcional):</label>
+                        <input type="text" id="reg-socia" placeholder="¿Quién entrega?" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box;">
+                    </div>
+
+                    <button type="submit" style="width: 100%; padding: 15px; background: #28a745; color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer;">
+                        🚀 Registrar Envío
+                    </button>
+                </form>
+                
+                <p id="msg-vendedora" style="text-align: center; margin-top: 20px; padding: 10px; border-radius: 8px; display: none;"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Al cargar la página, ponemos la fecha de hoy automáticamente
+        document.addEventListener('DOMContentLoaded', () => {
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('reg-fecha').value = hoy;
+            
+            // Verificamos si hay sesión, si no, al login
+            if (!localStorage.getItem('idUsuario')) {
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Manejo del formulario
+        document.getElementById('formRegistroVendedora').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const idVendedora = localStorage.getItem('idUsuario');
+            await registrarPaqueteVendedora(idVendedora);
+        });
+
+        function cerrarSesion() {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
