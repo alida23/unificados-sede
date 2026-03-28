@@ -1023,3 +1023,42 @@ window.registrarPaqueteVendedora = async function(vendedoraId) {
 
     msg.style.display = "block";
 }; // 👈 ESTA LLAVE FALTABA
+
+async function cargarMisPaquetes() {
+    const idEmprendedora = localStorage.getItem('idUsuario');
+    const tbody = document.getElementById('lista-paquetes-vendedora');
+    
+    if (!tbody) return; // Si no estamos en la página de vendedora, no hace nada
+
+    // Consultamos solo los paquetes de esta emprendedora
+    const { data: paquetes, error } = await _supabase
+        .from('paquetes') // Asegúrate que tu tabla se llame así
+        .select('*')
+        .eq('id_usuario', idEmprendedora) 
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error("Error cargando paquetes:", error);
+        return;
+    }
+
+    tbody.innerHTML = ''; // Limpiamos la tabla
+
+    paquetes.forEach(pkg => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+            <td style="font-weight: bold; color: #2c3e50;">#${pkg.id}</td>
+            <td>${pkg.nombre_cliente}</td>
+            <td><span class="badge ${pkg.estado}">${pkg.estado}</span></td>
+            <td>${new Date(pkg.created_at).toLocaleDateString()}</td>
+        `;
+        tbody.appendChild(fila);
+    });
+}
+
+// Llamar a la función cuando cargue la página
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('panel-vendedora')) {
+        cargarMisPaquetes();
+    }
+});
