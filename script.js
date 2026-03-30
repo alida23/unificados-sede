@@ -1062,3 +1062,63 @@ document.addEventListener('DOMContentLoaded', () => {
         cargarMisPaquetes();
     }
 });
+
+// Función para cambiar de vista (Estética)
+function mostrarSeccion(seccion) {
+    const sRegistro = document.getElementById('seccion-registro');
+    const sTabla = document.getElementById('seccion-tabla');
+    const btnReg = document.getElementById('btn-nav-registro');
+    const btnTab = document.getElementById('btn-nav-tabla');
+
+    if (seccion === 'registro') {
+        sRegistro.style.display = 'block';
+        sTabla.style.display = 'none';
+        btnReg.style.background = '#d81b60'; btnReg.style.color = 'white';
+        btnTab.style.background = '#eee'; btnTab.style.color = '#666';
+    } else {
+        sRegistro.style.display = 'none';
+        sTabla.style.display = 'block';
+        btnReg.style.background = '#eee'; btnReg.style.color = '#666';
+        btnTab.style.background = '#d81b60'; btnTab.style.color = 'white';
+        cargarMisPaquetes(); // Cargamos los datos al abrir la pestaña
+    }
+}
+
+// Función para cargar los datos de Supabase
+async function cargarMisPaquetes() {
+    const idVendedora = localStorage.getItem('idUsuario');
+    const tbody = document.getElementById('lista-paquetes-vendedora');
+    
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Cargando...</td></tr>';
+
+    try {
+        // IMPORTANTE: Asegúrate de que tu tabla en Supabase tenga la columna 'id_usuario'
+        const { data, error } = await _supabase
+            .from('paquetes')
+            .select('*')
+            .eq('id_usuario', idVendedora)
+            .order('id', { ascending: false });
+
+        if (error) throw error;
+
+        tbody.innerHTML = ''; // Limpiar mensaje de carga
+
+        if (data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">No tienes paquetes registrados.</td></tr>';
+            return;
+        }
+
+        data.forEach(pkg => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="padding: 10px; border-bottom: 1px solid #eee; font-weight: bold;">#${pkg.id}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #eee;">${pkg.nombre_cliente}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #eee;"><span style="background:#fff3cd; color:#856404; padding:4px 8px; border-radius:5px; font-size:12px;">${pkg.estado || 'Pendiente'}</span></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    } catch (err) {
+        console.error("Error:", err);
+        tbody.innerHTML = '<tr><td colspan="3" style="color:red; text-align:center;">Error al conectar con la base de datos.</td></tr>';
+    }
+}

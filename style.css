@@ -439,3 +439,48 @@ body.login-page {
 .package-item-row:last-child { border-bottom: none; }
 
 .package-item-row span b { color: var(--verde-ok); }
+
+<div id="panel-vendedora" class="container" style="padding: 20px; max-width: 600px; margin: auto; font-family: sans-serif;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 style="color: #d81b60; margin: 0;">¡Hola! 👋</h2>
+        <button onclick="cerrarSesion()" style="background: #ffecf1; color: #d81b60; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold;">Salir</button>
+    </div>
+
+    <div style="display: flex; gap: 10px; margin-bottom: 25px;">
+        <button onclick="mostrarSeccion('registro')" id="btn-nav-registro" style="flex: 1; padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; background: #d81b60; color: white;">📝 Registrar</button>
+        <button onclick="mostrarSeccion('tabla')" id="btn-nav-tabla" style="flex: 1; padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; background: #eee; color: #666;">📦 Mis Paquetes</button>
+    </div>
+    
+    <div id="seccion-registro" class="card-scanner" style="background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+        <h3 style="margin-top: 0; color: #333;">Registrar Nuevo Paquete</h3>
+        <form id="formRegistroVendedora">
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 5px;">Cliente:</label>
+                <input type="text" id="reg-cliente" placeholder="Nombre completo" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 5px;">Fecha de Entrega:</label>
+                <input type="date" id="reg-fecha" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box;">
+            </div>
+            <button type="submit" style="width: 100%; padding: 15px; background: #28a745; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer;">Guardar Paquete</button>
+        </form>
+    </div>
+
+    <div id="seccion-tabla" style="display: none; background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+        <h3 style="margin-top: 0; color: #333;">Mis Paquetes Registrados</h3>
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="text-align: left; border-bottom: 2px solid #eee;">
+                        <th style="padding: 10px;">ID</th>
+                        <th style="padding: 10px;">Cliente</th>
+                        <th style="padding: 10px;">Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-paquetes-vendedora">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</div>
