@@ -1032,7 +1032,7 @@ async function cargarMisPaquetes() {
 
     // Consultamos solo los paquetes de esta emprendedora
     const { data: paquetes, error } = await _supabase
-        .from('paquetes') // Asegúrate que tu tabla se llame así
+        .from('pedidos') // Asegúrate que tu tabla se llame así
         .select('*')
         .eq('id_usuario', idEmprendedora) 
         .order('created_at', { ascending: false });
