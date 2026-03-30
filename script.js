@@ -993,6 +993,7 @@ window.registrarPaqueteVendedora = async function(vendedoraId) {
     const cliente = document.getElementById('reg-cliente').value;
     const cant = document.getElementById('reg-cant').value;
     const fecha = document.getElementById('reg-fecha').value;
+    const socia_input = document.getElementById('reg-socia').value;
     const msg = document.getElementById('msg-vendedora');
 
     if (!cliente || !fecha) {
@@ -1006,7 +1007,7 @@ window.registrarPaqueteVendedora = async function(vendedoraId) {
                 vendedora_id: vendedoraId, 
                 cliente: cliente, 
                 paquetes: cant,
-                socia_representante: socia,
+                socia_representante: socia_input,
                 entrega: fecha,
                 estado: 'pendiente'
             }
@@ -1017,6 +1018,7 @@ window.registrarPaqueteVendedora = async function(vendedoraId) {
         msg.innerText = "✅ ¡Paquete registrado con éxito!";
         msg.style.color = "green";
         document.getElementById('reg-cliente').value = ""; // Limpiar campo
+        document.getElementById('reg-socia').value = "";
         
         // Actualizar la tabla automáticamente si está abierta
         cargarMisPaquetes(); 
