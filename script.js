@@ -1025,22 +1025,22 @@ window.registrarPaqueteVendedora = async function(vendedoraId) {
 }; // 👈 ESTA LLAVE FALTABA
 
 async function cargarMisPaquetes() {
-    const idEmprendedora = localStorage.getItem('idUsuario');
+    const vendedora_id = localStorage.getItem('idUsuario');
     const tbody = document.getElementById('lista-paquetes-vendedora');
     
-    if (!tbody) return; // Si no estamos en la página de vendedora, no hace nada
-
-    // Consultamos solo los paquetes de esta emprendedora
-    const { data: paquetes, error } = await _supabase
-        .from('pedidos') // Asegúrate que tu tabla se llame así
+    // Cambiamos 'paquetes' por 'pedidos'
+    const { data, error } = await _supabase
+        .from('pedidos') 
         .select('*')
-        .eq('id_usuario', idEmprendedora) 
-        .order('created_at', { ascending: false });
+        .eq('id_usuario', vendedora_id) // <--- Revisa si en Supabase se llama así
+        .order('id', { ascending: false });
 
     if (error) {
-        console.error("Error cargando paquetes:", error);
+        console.error("Error de Supabase:", error);
         return;
     }
+    // ... resto del código para llenar la tabla
+}
 
     tbody.innerHTML = ''; // Limpiamos la tabla
 
