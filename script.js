@@ -991,6 +991,7 @@ window.verChecklistAgrupado = async function () {
 // 1. Función para guardar el pedido en Supabase
 window.registrarPaqueteVendedora = async function(vendedoraId) {
     const cliente = document.getElementById('reg-cliente').value;
+    const cant = document.getElementById('reg-cant').value;
     const fecha = document.getElementById('reg-fecha').value;
     const msg = document.getElementById('msg-vendedora');
 
@@ -1004,6 +1005,8 @@ window.registrarPaqueteVendedora = async function(vendedoraId) {
             { 
                 vendedora_id: vendedoraId, 
                 cliente: cliente, 
+                paquetes: cant,
+                socia_representante: socia,
                 entrega: fecha,
                 estado: 'pendiente'
             }
@@ -1011,7 +1014,7 @@ window.registrarPaqueteVendedora = async function(vendedoraId) {
 
         if (error) throw error;
 
-        msg.innerText = "✅ ¡Pedido registrado con éxito!";
+        msg.innerText = "✅ ¡Paquete registrado con éxito!";
         msg.style.color = "green";
         document.getElementById('reg-cliente').value = ""; // Limpiar campo
         
