@@ -985,86 +985,93 @@ window.verChecklistAgrupado = async function () {
 };
 
 // ==========================================
-// 13. PANEL DE ACCESO A VENDEDORAS
+// 13. PANEL DE ACCESO A VENDEDORAS (CORREGIDO)
 // ==========================================
 
-// Función para guardar el paquete en Supabase
+// 1. Función para guardar el pedido en Supabase
 window.registrarPaqueteVendedora = async function(vendedoraId) {
     const cliente = document.getElementById('reg-cliente').value;
-    const cant = document.getElementById('reg-cant').value;
-    const socia = document.getElementById('reg-socia').value;
     const fecha = document.getElementById('reg-fecha').value;
     const msg = document.getElementById('msg-vendedora');
 
     if (!cliente || !fecha) {
-        alert("Por favor ingresa el nombre del cliente y la fecha de entrega");
+        alert("Por favor ingresa el nombre del cliente y la fecha");
         return;
     }
 
-    const { error } = await _supabase.from('pedidos').insert([
-        { 
-            vendedora_id: vendedoraId, 
-            cliente: cliente, 
-            paquetes: cant, 
-            socia_representante: socia,
-            entrega: fecha,
-            estado: 'pendiente'
-        }
-    ]);
+    try {
+        const { error } = await _supabase.from('pedidos').insert([
+            { 
+                vendedora_id: vendedoraId, 
+                cliente: cliente, 
+                entrega: fecha,
+                estado: 'pendiente'
+            }
+        ]);
 
-    if (error) {
+        if (error) throw error;
+
+        msg.innerText = "✅ ¡Pedido registrado con éxito!";
+        msg.style.color = "green";
+        document.getElementById('reg-cliente').value = ""; // Limpiar campo
+        
+        // Actualizar la tabla automáticamente si está abierta
+        cargarMisPaquetes(); 
+
+    } catch (error) {
         msg.innerText = "❌ Error: " + error.message;
         msg.style.color = "red";
-    } else {
-        msg.innerText = "✅ ¡Paquete registrado con éxito!";
-        msg.style.color = "green";
-        document.getElementById('reg-cliente').value = "";
     }
 
     msg.style.display = "block";
-}; // 👈 ESTA LLAVE FALTABA
+};
 
+// 2. Función para cargar los datos de Supabase en la tabla
 async function cargarMisPaquetes() {
-    const vendedora_id = localStorage.getItem('idUsuario');
+    const idVendedora = localStorage.getItem('idUsuario');
     const tbody = document.getElementById('lista-paquetes-vendedora');
     
-    // Cambiamos 'paquetes' por 'pedidos'
-    const { data, error } = await _supabase
-        .from('pedidos') 
-        .select('*')
-        .eq('id_usuario', vendedora_id) // <--- Revisa si en Supabase se llama así
-        .order('id', { ascending: false });
+    if (!tbody) return; // Si no existe la tabla en el HTML, salir
 
-    if (error) {
-        console.error("Error de Supabase:", error);
-        return;
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Cargando...</td></tr>';
+
+    try {
+        const { data, error } = await _supabase
+            .from('pedidos') // Nombre de tu tabla
+            .select('*')
+            .eq('vendedora_id', idVendedora) // Nombre de tu columna
+            .order('id', { ascending: false });
+
+        if (error) throw error;
+
+        tbody.innerHTML = ''; 
+
+        if (data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">No tienes pedidos registrados.</td></tr>';
+            return;
+        }
+
+        data.forEach(pkg => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="padding: 10px; border-bottom: 1px solid #eee; font-weight: bold;">#${pkg.id}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #eee;">${pkg.cliente || 'Sin nombre'}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #eee;">
+                    <span style="background:#fff3cd; color:#856404; padding:4px 8px; border-radius:5px; font-size:12px;">
+                        ${pkg.estado || 'Pendiente'}
+                    </span>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    } catch (err) {
+        console.error("Error cargando tabla:", err);
+        tbody.innerHTML = '<tr><td colspan="3" style="color:red; text-align:center;">Error al conectar con la base de datos.</td></tr>';
     }
-    // ... resto del código para llenar la tabla
 }
 
-    tbody.innerHTML = ''; // Limpiamos la tabla
-
-    paquetes.forEach(pkg => {
-        const fila = document.createElement('tr');
-        fila.innerHTML = `
-            <td style="font-weight: bold; color: #2c3e50;">#${pkg.id}</td>
-            <td>${pkg.nombre_cliente}</td>
-            <td><span class="badge ${pkg.estado}">${pkg.estado}</span></td>
-            <td>${new Date(pkg.created_at).toLocaleDateString()}</td>
-        `;
-        tbody.appendChild(fila);
-    });
-}
-
-// Llamar a la función cuando cargue la página
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('panel-vendedora')) {
-        cargarMisPaquetes();
-    }
-});
-
-// Función para cambiar de vista (Estética)
-function mostrarSeccion(seccion) {
+// 3. Función para cambiar de vista (Pestañas)
+window.mostrarSeccion = function(seccion) {
     const sRegistro = document.getElementById('seccion-registro');
     const sTabla = document.getElementById('seccion-tabla');
     const btnReg = document.getElementById('btn-nav-registro');
@@ -1080,45 +1087,13 @@ function mostrarSeccion(seccion) {
         sTabla.style.display = 'block';
         btnReg.style.background = '#eee'; btnReg.style.color = '#666';
         btnTab.style.background = '#d81b60'; btnTab.style.color = 'white';
-        cargarMisPaquetes(); // Cargamos los datos al abrir la pestaña
+        cargarMisPaquetes(); 
     }
-}
+};
 
-// Función para cargar los datos de Supabase
-async function cargarMisPaquetes() {
-    const idVendedora = localStorage.getItem('idUsuario');
-    const tbody = document.getElementById('lista-paquetes-vendedora');
-    
-    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Cargando...</td></tr>';
-
-    try {
-        // IMPORTANTE: Asegúrate de que tu tabla en Supabase tenga la columna 'id_usuario'
-        const { data, error } = await _supabase
-            .from('paquetes')
-            .select('*')
-            .eq('id_usuario', idVendedora)
-            .order('id', { ascending: false });
-
-        if (error) throw error;
-
-        tbody.innerHTML = ''; // Limpiar mensaje de carga
-
-        if (data.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">No tienes paquetes registrados.</td></tr>';
-            return;
-        }
-
-        data.forEach(pkg => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td style="padding: 10px; border-bottom: 1px solid #eee; font-weight: bold;">#${pkg.id}</td>
-                <td style="padding: 10px; border-bottom: 1px solid #eee;">${pkg.nombre_cliente}</td>
-                <td style="padding: 10px; border-bottom: 1px solid #eee;"><span style="background:#fff3cd; color:#856404; padding:4px 8px; border-radius:5px; font-size:12px;">${pkg.estado || 'Pendiente'}</span></td>
-            `;
-            tbody.appendChild(tr);
-        });
-    } catch (err) {
-        console.error("Error:", err);
-        tbody.innerHTML = '<tr><td colspan="3" style="color:red; text-align:center;">Error al conectar con la base de datos.</td></tr>';
+// 4. Iniciar al cargar
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('panel-vendedora')) {
+        cargarMisPaquetes();
     }
-}
+});
