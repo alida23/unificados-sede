@@ -9,114 +9,107 @@
 </head>
 <body style="background-color: #f4f7f6;">
 
-    <div id="panel-vendedora" class="container" style="padding: 20px; max-width: 600px; margin: auto; font-family: sans-serif;">
-        
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2 style="color: #d81b60; margin: 0;">¡Hola! 👋</h2>
-            <button onclick="cerrarSesion()" style="background: #ffecf1; color: #d81b60; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold;">Salir</button>
-        </div>
-
-        <div style="display: flex; gap: 10px; margin-bottom: 25px;">
-            <button onclick="mostrarSeccion('registro')" id="btn-nav-registro" style="flex: 1; padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; background: #d81b60; color: white;">📝 Registrar</button>
-            <button onclick="mostrarSeccion('tabla')" id="btn-nav-tabla" style="flex: 1; padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; background: #eee; color: #666;">📦 Mis Pedidos</button>
-        </div>
-        
-        <div id="seccion-registro" style="background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-            <h3 style="margin-top: 0; color: #333;">Nuevo Envío</h3>
-            <form id="formRegistroVendedora">
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 5px;">Cliente:</label>
-                    <input type="text" id="reg-cliente" placeholder="Nombre completo" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box;">
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 5px;">Fecha:</label>
-                    <input type="date" id="reg-fecha" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box;">
-                </div>
-                <button type="submit" style="width: 100%; padding: 15px; background: #28a745; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer;">Guardar en Pedidos</button>
-            </form>
-            <p id="msg-vendedora" style="text-align: center; margin-top: 15px; display: none;"></p>
-        </div>
-
-        <div id="seccion-tabla" style="display: none; background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-            <h3 style="margin-top: 0; color: #333;">Mis Pedidos</h3>
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr style="text-align: left; border-bottom: 2px solid #eee;">
-                            <th style="padding: 10px;">ID</th>
-                            <th style="padding: 10px;">Cliente</th>
-                            <th style="padding: 10px;">Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody id="lista-paquetes-vendedora"></tbody>
-                </table>
+    <div id="panel-vendedora" class="container">
+        <div style="padding: 20px; max-width: 500px; margin: auto; font-family: sans-serif;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="color: #d81b60;">¡Hola! 👋</h2>
+                <button onclick="cerrarSesion()" style="background: #eee; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold;">Cerrar Sesión</button>
             </div>
+
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button onclick="verSeccion('registro')" id="btn-reg" style="flex: 1; padding: 10px; border-radius: 10px; border: none; cursor: pointer; background: #d81b60; color: white; font-weight: bold;">Registrar</button>
+                <button onclick="verSeccion('pedidos')" id="btn-ped" style="flex: 1; padding: 10px; border-radius: 10px; border: none; cursor: pointer; background: #eee; color: #333; font-weight: bold;">Mis Pedidos</button>
+            </div>
+            
+            <div id="seccion-registrar" class="card-scanner" style="background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <h3 style="margin-top: 0; color: #333; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px;">📦 Registrar Paquete</h3>
+                
+                <form id="formRegistroVendedora">
+                    <div style="margin-top: 20px; margin-bottom: 15px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Nombre del Cliente:</label>
+                        <input type="text" id="reg-cliente" placeholder="Nombre completo" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box;">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Cantidad de Paquetes:</label>
+                        <input type="number" id="reg-cant" value="1" min="1" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box;">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Fecha de Entrega en Sede:</label>
+                        <input type="date" id="reg-fecha" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box;">
+                    </div>
+
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #555;">Socia/Representante (Opcional):</label>
+                        <input type="text" id="reg-socia" placeholder="¿Quién entrega?" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box;">
+                    </div>
+
+                    <button type="submit" style="width: 100%; padding: 15px; background: #28a745; color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer;">
+                        🚀 Registrar Envío
+                    </button>
+                </form>
+                
+                <p id="msg-vendedora" style="text-align: center; margin-top: 20px; padding: 10px; border-radius: 8px; display: none;"></p>
+            </div>
+
+            <section id="seccion-pedidos" class="seccion-vendedora" style="display: none; background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <h3 style="margin-top: 0; color: #333;">📦 Mis Paquetes Registrados</h3>
+                <p style="font-size: 0.9em; color: #666;">Anota el ID en tus paquetes.</p>
+               
+                <div class="tabla-responsiva" style="overflow-x: auto; margin-top: 15px;">
+                    <table id="tabla-mis-paquetes" style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="text-align: left; border-bottom: 2px solid #f0f0f0;">
+                                <th style="padding: 10px;">ID</th>
+                                <th style="padding: 10px;">Cliente</th>
+                                <th style="padding: 10px;">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-paquetes-vendedora"></tbody>
+                    </table>
+                </div>
+            </section>
         </div>
     </div>
 
     <script src="script.js"></script>
     <script>
-        // Lógica de navegación
-        function mostrarSeccion(seccion) {
-            const sReg = document.getElementById('seccion-registro');
-            const sTab = document.getElementById('seccion-tabla');
-            const bReg = document.getElementById('btn-nav-registro');
-            const bTab = document.getElementById('btn-nav-tabla');
+        // Función para cambiar entre Registrar y Mis Pedidos
+        function verSeccion(seccion) {
+            const reg = document.getElementById('seccion-registrar');
+            const ped = document.getElementById('seccion-pedidos');
+            const btnReg = document.getElementById('btn-reg');
+            const btnPed = document.getElementById('btn-ped');
 
             if (seccion === 'registro') {
-                sReg.style.display = 'block'; sTab.style.display = 'none';
-                bReg.style.background = '#d81b60'; bReg.style.color = 'white';
-                bTab.style.background = '#eee'; bTab.style.color = '#666';
+                reg.style.display = 'block'; ped.style.display = 'none';
+                btnReg.style.background = '#d81b60'; btnReg.style.color = 'white';
+                btnPed.style.background = '#eee'; btnPed.style.color = '#333';
             } else {
-                sReg.style.display = 'none'; sTab.style.display = 'block';
-                bReg.style.background = '#eee'; bReg.style.color = '#666';
-                bTab.style.background = '#d81b60'; bTab.style.color = 'white';
-                cargarMisPedidos(); 
+                reg.style.display = 'none'; ped.style.display = 'block';
+                btnReg.style.background = '#eee'; btnReg.style.color = '#333';
+                btnPed.style.background = '#d81b60'; btnPed.style.color = 'white';
+                if (typeof cargarMisPaquetes === 'function') cargarMisPaquetes();
             }
         }
 
-        // Función para cargar DATOS REALES de Supabase
-        async function cargarMisPedidos() {
-            const idVendedora = localStorage.getItem('idUsuario');
-            const tbody = document.getElementById('lista-paquetes-vendedora');
-            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Cargando...</td></tr>';
-
-            try {
-                // AQUÍ ESTÁ EL CAMBIO CLAVE: 'pedidos' y 'vendedora_id'
-                const { data, error } = await _supabase
-                    .from('pedidos')
-                    .select('*')
-                    .eq('vendedora_id', idVendedora) 
-                    .order('id', { ascending: false });
-
-                if (error) throw error;
-
-                tbody.innerHTML = '';
-                if (data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:15px;">No hay pedidos.</td></tr>';
-                    return;
-                }
-
-                data.forEach(p => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td style="padding:10px; border-bottom:1px solid #eee; font-weight:bold;">#${p.id}</td>
-                        <td style="padding:10px; border-bottom:1px solid #eee;">${p.nombre_cliente || 'Sin nombre'}</td>
-                        <td style="padding:10px; border-bottom:1px solid #eee;"><span style="background:#e3f2fd; color:#1565c0; padding:3px 8px; border-radius:5px; font-size:11px;">${p.estado || 'Pendiente'}</span></td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (e) {
-                console.error(e);
-                tbody.innerHTML = '<tr><td colspan="3" style="color:red; text-align:center;">Error de conexión.</td></tr>';
-            }
-        }
-
-        // Registro de fecha y cierre de sesión
         document.addEventListener('DOMContentLoaded', () => {
             const hoy = new Date().toISOString().split('T')[0];
             document.getElementById('reg-fecha').value = hoy;
-            if (!localStorage.getItem('idUsuario')) window.location.href = 'index.html';
+           
+            if (!localStorage.getItem('idUsuario')) {
+                window.location.href = 'index.html';
+            }
+        });
+
+        document.getElementById('formRegistroVendedora').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const idVendedora = localStorage.getItem('idUsuario');
+            if (typeof registrarPaqueteVendedora === 'function') {
+                await registrarPaqueteVendedora(idVendedora);
+            }
         });
 
         function cerrarSesion() {
